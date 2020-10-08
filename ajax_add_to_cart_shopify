@@ -1,0 +1,28 @@
+(function () {
+  var documentDelegate = new domDelegate.Delegate(document.body)
+    documentDelegate.on('click','.add_to_cart_btn',function(){         
+      
+      var id = $(this).data('vid');
+       $(this).parent().addClass('added-parent');
+      var quantity = '1';
+      
+        jQuery.ajax({
+            type: 'POST',
+            url: '/cart/add.js',
+            dataType: 'json',
+            data: {id:id,quantity:quantity},
+            success: function(cart) { 
+              jQuery.getJSON('/cart.js', function(cart){
+//                 console.log('There are now ' + cart.item_count + ' items in the cart.');
+                $('.Header__CartDot').addClass('is-visible');
+                $('.added-parent').addClass('added-visible');
+                setTimeout(function(){ $('.added-parent').removeClass('added-visible'); $('.add_to_cart_wrap').removeClass('added-parent'); }, 2000);
+              });
+            },
+            error: function(XMLHttpRequest, textStatus) {
+              Shopify.onError(XMLHttpRequest, textStatus);
+            }
+        });
+      
+    });
+    })();
